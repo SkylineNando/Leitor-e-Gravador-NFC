@@ -1,0 +1,22 @@
+<input type="text" id="textInput" placeholder="Digite algo para gravar">
+<button id="writeButton">Gravar na Tag NFC</button>
+
+<script>
+    const writeButton = document.getElementById('writeButton');
+    const textInput = document.getElementById('textInput');
+    const output = document.getElementById('output');
+
+    writeButton.addEventListener('click', async () => {
+        if ('NDEFReader' in window) {
+            try {
+                const ndef = new NDEFReader();
+                await ndef.write(textInput.value);
+                output.textContent = `Dados "${textInput.value}" gravados com sucesso!`;
+            } catch (error) {
+                output.textContent = `Erro: ${error}`;
+            }
+        } else {
+            output.textContent = 'NFC não suportado neste navegador.';
+        }
+    });
+</script>
