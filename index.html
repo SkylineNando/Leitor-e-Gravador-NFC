@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leitor NFC</title>
+</head>
+<body>
+    <h1>Leitura de NFC</h1>
+    <button id="startButton">Iniciar Leitura NFC</button>
+    <p id="output"></p>
+
+    <script>
+        const startButton = document.getElementById('startButton');
+        const output = document.getElementById('output');
+
+        startButton.addEventListener('click', async () => {
+            if ('NDEFReader' in window) {
+                try {
+                    const ndef = new NDEFReader();
+                    await ndef.scan();
+                    output.textContent = 'Aguardando leitura da tag NFC...';
+
+                    ndef.onreading = event => {
+                        const decoder = new TextDecoder();
+                        for (const record of event.message.records) {
+                            output.textContent = `Dados lidos: ${decoder.decode(record.data)}`;
+                        }
+                    };
+                } catch (error) {
+                    output.textContent = `Erro: ${error}`;
+                }
+            } else {
+                output.textContent = 'NFC não suportado neste navegador.';
+            }
+        });
+    </script>
+</body>
+</html>
